@@ -38,11 +38,11 @@ DependencyList is available through [Swift Package Manager](https://github.com/a
 2. Link DependencyList in your application target
    - Application Target > `General` > `Frameworks, Libraries, and Embedded Content` > `+`
    - Choose `DependencyList`  
-     <img src="./Screenshots/installation-2.png" width="500px" />
+     <img src="./Screenshots/installation-2.png" width="600px" />
 3. Add PrepareDependencyList plugin to build phases
    - Application Target > `Build Phases` > `Run Build Tool Plug-ins` > `+`
    - Choose `PrepareDependencyList`  
-     <img src="./Screenshots/installation-3.png" width="500px" />
+     <img src="./Screenshots/installation-3.png" width="650px" />
 
 ## Usage
 
