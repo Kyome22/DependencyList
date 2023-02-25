@@ -13,7 +13,7 @@ public class DependencyListWindow: NSWindow {
         super.init(contentRect: .zero,
                    styleMask: [.closable, .resizable, .titled],
                    backing: .buffered,
-                   defer: true)
+                   defer: false)
         self.title = "licenses".localized
         self.titlebarAppearsTransparent = true
         self.hasShadow = true
