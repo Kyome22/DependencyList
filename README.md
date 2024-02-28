@@ -23,8 +23,8 @@ Generate a list of dependencies for the swift package libraries that your macOS 
 ## Requirements
 
 - Written in Swift 5
-- Compatible with macOS 11.0+
-- Development with Xcode 14.1+
+- Compatible with macOS 12.0+
+- Development with Xcode 15.2+
 
 ## Installation
 
@@ -39,10 +39,6 @@ DependencyList is available through [Swift Package Manager](https://github.com/a
    - Application Target > `General` > `Frameworks, Libraries, and Embedded Content` > `+`
    - Choose `DependencyList`  
      <img src="./Screenshots/installation-2.png" width="600px" />
-3. Add PrepareDependencyList plugin to build phases
-   - Application Target > `Build Phases` > `Run Build Tool Plug-ins` > `+`
-   - Choose `PrepareDependencyList`  
-     <img src="./Screenshots/installation-3.png" width="650px" />
 
 ## Usage
 

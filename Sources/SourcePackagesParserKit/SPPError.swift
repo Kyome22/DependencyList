@@ -16,7 +16,7 @@ public enum SPPError: LocalizedError {
         case .couldNotReadFile(let file):
             return "Could not read \(file)."
         case .couldNotExportLicenseList:
-            return "Could not export dependency-list.plist."
+            return "Could not export DependencyList.swift."
         }
     }
 }

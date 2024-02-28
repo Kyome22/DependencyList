@@ -10,10 +10,6 @@ import SwiftUI
 struct DetailToggleStyle: ToggleStyle {
     let licenseType: String
 
-    init(_ licenseType: String) {
-        self.licenseType = licenseType
-    }
-
     func makeBody(configuration: Configuration) -> some View {
         HStack(alignment: .center) {
             Image(systemName: "triangle.fill")

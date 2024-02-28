@@ -10,11 +10,13 @@ import SwiftUI
 
 public class DependencyListWindow: NSWindow {
     public init() {
-        super.init(contentRect: .zero,
-                   styleMask: [.closable, .resizable, .titled],
-                   backing: .buffered,
-                   defer: false)
-        self.title = "licenses".localized
+        super.init(
+            contentRect: .zero,
+            styleMask: [.closable, .resizable, .titled],
+            backing: .buffered,
+            defer: false
+        )
+        self.title = String(localized: "licenses", bundle: .module)
         self.titlebarAppearsTransparent = true
         self.hasShadow = true
         let dependencyListViewModel = DependencyListViewModelImpl()

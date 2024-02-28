@@ -13,7 +13,6 @@ public final class SPPMain {
     public func run(_ outputPath: String, _ sourcePackagesPath: String) throws {
         let workspaceState = try getWorkspaceState(sourcePackagesPath)
         let libraries = getLibraries(sourcePackagesPath, workspaceState)
-        SwiftTree.print(libraries)
         try outputDependencyList(outputPath, libraries)
     }
 
@@ -55,7 +54,8 @@ public final class SPPMain {
                 return directoryURL.appendingPathComponent(content)
             }
             .filter { contentURL in
-                if contentURL.deletingPathExtension().lastPathComponent.lowercased() == "license" {
+                let fileName = contentURL.deletingPathExtension().lastPathComponent.lowercased()
+                if ["license", "licence"].contains(fileName) {
                     var isDiractory: ObjCBool = false
                     fm.fileExists(atPath: contentURL.path, isDirectory: &isDiractory)
                     return isDiractory.boolValue == false
@@ -72,24 +72,36 @@ public final class SPPMain {
 
     func outputDependencyList(_ outputPath: String, _ libraries: [Library]) throws {
         let saveURL = URL(fileURLWithPath: outputPath)
-            .appendingPathComponent("dependency-list.plist")
-        let array: [[String: Any]] = libraries.map { library in
-            return [
-                "name": library.name,
-                "repositoryURL": library.repositoryURL,
-                "licenseType": library.licenseType.rawValue,
-                "licenseBody": library.licenseBody
-            ]
+            .appendingPathComponent("DependencyList.swift")
+        var text = ""
+        if libraries.isEmpty {
+            Swift.print("Warning: No libraries.")
+        } else {
+            SwiftTree.print(libraries)
+            text = libraries
+                .map { library in
+                    return """
+                    [
+                        "name": "\(library.name)",
+                        "repositoryURL": "\(library.repositoryURL)",
+                        "licenseType": "\(library.licenseType.rawValue)",
+                        "licenseBody": \(library.licenseBody.debugDescription)
+                    ]
+                    """
+                }
+                .joined(separator: ",\n")
+                .nest()
+            text = "\n\(text)\n"
         }
+        text = "static let libraries: [[String: String]] = [\(text)]"
+        text = "enum SPP {\n\(text.nest())\n}\n"
+
         if FileManager.default.fileExists(atPath: saveURL.path) {
             try FileManager.default.removeItem(at: saveURL)
         }
-        let dict: [String: Any] = ["libraries": array]
+
         do {
-            let data = try PropertyListSerialization.data(fromPropertyList: dict,
-                                                          format: .xml,
-                                                          options: .zero)
-            try data.write(to: saveURL, options: .atomic)
+            try text.data(using: .utf8)?.write(to: saveURL)
         } catch {
             throw SPPError.couldNotExportLicenseList
         }

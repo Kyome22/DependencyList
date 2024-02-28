@@ -17,7 +17,7 @@ public struct LibraryView: View {
                 .font(.title)
             hyperLinkText(library.repositoryURL)
             Toggle("", isOn: $showDetail)
-                .toggleStyle(DetailToggleStyle(library.licenseType))
+                .toggleStyle(DetailToggleStyle(licenseType: library.licenseType))
             if showDetail {
                 ScrollView(.horizontal) {
                     VStack(spacing: 0) {
