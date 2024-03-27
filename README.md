@@ -26,6 +26,10 @@ Generate a list of dependencies for the swift package libraries that your macOS 
 - Compatible with macOS 12.0+
 - Development with Xcode 15.2+
 
+## Privacy Manifest
+
+This library does not collect or track user information, so it does not include a PrivacyInfo.xcprivacy file.
+
 ## Installation
 
 DependencyList is available through [Swift Package Manager](https://github.com/apple/swift-package-manager/).
