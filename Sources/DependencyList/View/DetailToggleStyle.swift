@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DetailToggleStyle: ToggleStyle {
-    let licenseType: String
+    var licenseType: String
 
     func makeBody(configuration: Configuration) -> some View {
         HStack(alignment: .center) {

@@ -9,15 +9,18 @@ import SwiftUI
 
 public struct LibraryView: View {
     @State private var showDetail: Bool = false
-    public let library: Library
+    public var library: Library
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(library.name)
                 .font(.title)
             hyperLinkText(library.repositoryURL)
-            Toggle("", isOn: $showDetail)
-                .toggleStyle(DetailToggleStyle(licenseType: library.licenseType))
+            Toggle(isOn: $showDetail) {
+                EmptyView()
+            }
+            .toggleStyle(DetailToggleStyle(licenseType: library.licenseType))
+            .labelsHidden()
             if showDetail {
                 ScrollView(.horizontal) {
                     VStack(spacing: 0) {

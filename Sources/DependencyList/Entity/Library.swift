@@ -14,7 +14,7 @@ public struct Library: Identifiable {
     public let licenseBody: String
     public let sentences: [LicenseSentence]
 
-    public var id: String { return name }
+    public var id: String { name }
 
     public init(name: String, repositoryURL: String, licenseType: String, licenseBody: String) {
         self.name = name

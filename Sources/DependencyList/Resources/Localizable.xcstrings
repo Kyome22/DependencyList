@@ -1,0 +1,39 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "acknowledgments%@" : {
+      "comment" : "Localizable.strings\n  \n\n  Created by Takuto Nakamura on 2022/12/16.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ is developed using the following excellent software components.\nThe developer deeply appreciates the release and provision of useful software/information."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@には下記の素晴らしい技術が使われています。\n有益なソフトウェア/情報の公開と提供に深く感謝いたします。"
+          }
+        }
+      }
+    },
+    "licenses" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Licenses"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ライセンス"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

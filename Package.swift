@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 5.10
 
 import PackageDescription
 
@@ -22,7 +22,7 @@ let package = Package(
         .executableTarget(
             name: "source-packages-parser",
             dependencies: [
-                .target(name: "SourcePackagesParserKit"),
+                "SourcePackagesParserKit",
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
             ],
             path: "Sources/SourcePackagesParser"
@@ -30,7 +30,9 @@ let package = Package(
         .plugin(
             name: "PrepareDependencyList",
             capability: .buildTool(),
-            dependencies: [.target(name: "source-packages-parser")]
+            dependencies: [
+                "source-packages-parser"
+            ]
         ),
         .target(
             name: "DependencyList",

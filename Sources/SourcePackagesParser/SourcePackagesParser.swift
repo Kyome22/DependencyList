@@ -10,14 +10,14 @@ import SourcePackagesParserKit
 
 struct SourcePackagesParser: ParsableCommand {
     static var configuration = CommandConfiguration(
-        commandName: "pbxproj-parser",
-        abstract: "A tool to parse pbxproj and output a dependency plist.",
+        commandName: "source-packages-parser",
+        abstract: "A tool to parse workspace-state.json and output a dependency list.",
         version: "0.0.1"
     )
 
     @Option(
         name: [.customShort("o"), .customLong("output-path")],
-        help: "Output path of the dependency-list.plist"
+        help: "Output path of the DependencyList.swift"
     )
     var outputPath: String
 
