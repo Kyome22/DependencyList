@@ -2,7 +2,6 @@
   "sourceLanguage" : "en",
   "strings" : {
     "acknowledgments%@" : {
-      "comment" : "Localizable.strings\n  \n\n  Created by Takuto Nakamura on 2022/12/16.",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -30,6 +29,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ライセンス"
+          }
+        }
+      }
+    },
+    "unknownApp" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown App"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "名称不明アプリ"
           }
         }
       }

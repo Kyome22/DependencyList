@@ -19,12 +19,13 @@ Generate a list of dependencies for the swift package libraries that your macOS 
 - MIT License
 - BSD 3-clause Clear license
 - zLib License
+- BoringSSL License
 
 ## Requirements
 
-- Written in Swift 5
-- Compatible with macOS 12.0+
-- Development with Xcode 15.2+
+- Development with Xcode 16.2+
+- Written in Swift 6
+- Compatible with macOS 13.0+
 
 ## Privacy Manifest
 

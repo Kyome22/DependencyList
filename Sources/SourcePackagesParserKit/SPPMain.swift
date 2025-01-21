@@ -8,79 +8,80 @@
 import Foundation
 
 public final class SPPMain {
-    public init() {}
+    let outputURL: URL
+    let sourcePackagesURL: URL
 
-    public func run(_ outputPath: String, _ sourcePackagesPath: String) throws {
-        let workspaceState = try getWorkspaceState(sourcePackagesPath)
-        let libraries = getLibraries(sourcePackagesPath, workspaceState)
-        try outputDependencyList(outputPath, libraries)
+    public init(_ outputPath: String, _ sourcePackagesPath: String) {
+        outputURL = URL(filePath: outputPath)
+        sourcePackagesURL = URL(filePath: sourcePackagesPath)
     }
 
-    func getWorkspaceState(_ path: String) throws -> WorkspaceState {
-        let workspaceStateURL = URL(fileURLWithPath: path)
-            .appendingPathComponent("workspace-state.json")
+    public func run() throws {
+        let workspaceState = try getWorkspaceState()
+        let libraries = getLibraries(workspaceState)
+        try outputDependencyList(libraries)
+    }
+
+    private func getWorkspaceState() throws -> WorkspaceState {
+        let workspaceStateURL = sourcePackagesURL.appending(path: "workspace-state.json")
         guard let data = try? Data(contentsOf: workspaceStateURL),
-              let workspaceState = try? JSONDecoder().decode(WorkspaceState.self, from: data)
-        else {
+              let workspaceState = try? JSONDecoder().decode(WorkspaceState.self, from: data) else {
             throw SPPError.couldNotReadFile(workspaceStateURL.lastPathComponent)
         }
         return workspaceState
     }
 
-    func getLibraries(_ path: String,_ workspaceState: WorkspaceState) -> [Library] {
-        let checkoutsPath = "\(path)/checkouts"
+    private func getLibraries(_ workspaceState: WorkspaceState) -> [Library] {
+        let checkoutsURL = sourcePackagesURL.appending(path: "checkouts")
         let libraries: [Library] = workspaceState.object.dependencies
             .compactMap { dependency in
                 let repositoryName = dependency.packageRef.location
                     .components(separatedBy: "/").last!
                     .replacingOccurrences(of: ".git", with: "")
-                let directoryURL = URL(fileURLWithPath: checkoutsPath)
-                    .appendingPathComponent(repositoryName)
-                guard let license = extractLicense(directoryURL) else { return nil }
-                return Library(name: dependency.packageRef.name,
-                               repositoryURL: dependency.packageRef.location,
-                               licenseType: license.0,
-                               licenseBody: license.1)
+                let directoryURL = checkoutsURL.appending(path: repositoryName)
+                guard let licenseBody = extractLicense(directoryURL) else { return nil }
+                return Library(
+                    name: dependency.packageRef.name,
+                    repositoryURL: dependency.packageRef.location,
+                    licenseType: LicenseType(text: licenseBody),
+                    licenseBody: licenseBody
+                )
             }
             .sorted { $0.name.lowercased() < $1.name.lowercased() }
         return libraries
     }
 
-    func extractLicense(_ directoryURL: URL) -> (LicenseType, String)? {
+    private func extractLicense(_ directoryURL: URL) -> String? {
         let fm = FileManager.default
-        let contents = (try? fm.contentsOfDirectory(atPath: directoryURL.path)) ?? []
-        let _licenseURL = contents
-            .map { content in
-                return directoryURL.appendingPathComponent(content)
-            }
+        let contents = (try? fm.contentsOfDirectory(atPath: directoryURL.path())) ?? []
+        let licenseURL = contents
+            .map { directoryURL.appending(path: $0) }
             .filter { contentURL in
                 let fileName = contentURL.deletingPathExtension().lastPathComponent.lowercased()
-                if ["license", "licence"].contains(fileName) {
-                    var isDiractory: ObjCBool = false
-                    fm.fileExists(atPath: contentURL.path, isDirectory: &isDiractory)
-                    return isDiractory.boolValue == false
+                guard ["license", "licence"].contains(fileName) else {
+                    return false
                 }
-                return false
+                var isDiractory: ObjCBool = false
+                fm.fileExists(atPath: contentURL.path(), isDirectory: &isDiractory)
+                return isDiractory.boolValue == false
             }
             .first
-        if let licenseURL = _licenseURL,
-           let text = try? String(contentsOf: licenseURL) {
-            return (LicenseType(licenseText: text), text)
+        guard let licenseURL, let text = try? String(contentsOf: licenseURL) else {
+            return nil
         }
-        return nil
+        return text
     }
 
-    func outputDependencyList(_ outputPath: String, _ libraries: [Library]) throws {
-        let saveURL = URL(fileURLWithPath: outputPath)
-            .appendingPathComponent("DependencyList.swift")
+    private func outputDependencyList(_ libraries: [Library]) throws {
         var text = ""
+
         if libraries.isEmpty {
             Swift.print("Warning: No libraries.")
         } else {
             SwiftTree.print(libraries)
             text = libraries
                 .map { library in
-                    return """
+                    """
                     [
                         "name": "\(library.name)",
                         "repositoryURL": "\(library.repositoryURL)",
@@ -96,12 +97,12 @@ public final class SPPMain {
         text = "static let libraries: [[String: String]] = [\(text)]"
         text = "enum SPP {\n\(text.nest())\n}\n"
 
-        if FileManager.default.fileExists(atPath: saveURL.path) {
-            try FileManager.default.removeItem(at: saveURL)
+        if FileManager.default.fileExists(atPath: outputURL.path()) {
+            try FileManager.default.removeItem(at: outputURL)
         }
 
         do {
-            try text.data(using: .utf8)?.write(to: saveURL)
+            try text.data(using: .utf8)?.write(to: outputURL)
         } catch {
             throw SPPError.couldNotExportLicenseList
         }

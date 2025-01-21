@@ -9,10 +9,10 @@ import ArgumentParser
 import SourcePackagesParserKit
 
 struct SourcePackagesParser: ParsableCommand {
-    static var configuration = CommandConfiguration(
+    static let configuration = CommandConfiguration(
         commandName: "source-packages-parser",
         abstract: "A tool to parse workspace-state.json and output a dependency list.",
-        version: "0.0.1"
+        version: "1.0.0"
     )
 
     @Option(
@@ -28,6 +28,6 @@ struct SourcePackagesParser: ParsableCommand {
     var sourcePackagesPath: String
 
     mutating func run() throws {
-        try SPPMain().run(self.outputPath, self.sourcePackagesPath)
+        try SPPMain(outputPath, sourcePackagesPath).run()
     }
 }

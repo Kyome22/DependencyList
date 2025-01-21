@@ -6,12 +6,12 @@
 //
 
 struct Library: Hashable, CustomStringConvertible {
-    let name: String
-    let repositoryURL: String
-    let licenseType: LicenseType
-    let licenseBody: String
+    var name: String
+    var repositoryURL: String
+    var licenseType: LicenseType
+    var licenseBody: String
 
     var description: String {
-        return "\(name), \(repositoryURL)"
+        "\(name), \(repositoryURL)"
     }
 }
