@@ -41,7 +41,7 @@ struct PrepareDependencyList: BuildToolPlugin {
 
     // This command works with the plugin specified in `Package.swift`
     func createBuildCommands(context: PluginContext, target: Target) async throws -> [Command] {
-        return [
+        [
             makeBuildCommand(
                 executableURL: try context.tool(named: "source-packages-parser").url,
                 sourcePackagesURL: try sourcePackages(context.pluginWorkDirectoryURL),
