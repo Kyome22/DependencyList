@@ -5,33 +5,31 @@
 //  Created by Takuto Nakamura on 2022/12/16.
 //
 
-fileprivate let APACHE_2_TEXT = "TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION"
-fileprivate let MIT_TEXT = "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\")"
-fileprivate let BSD_3_CLAUSE_CLEAR_TEXT = "Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met"
-fileprivate let ZLIB_TEXT = "This software is provided \'as-is\', without any express or implied warranty. In no event will the authors be held liable for any damages arising from the use of this software."
-
 enum LicenseType: String {
-    case unknown = "Unknown License"
     case apache_2 = "Apache license 2.0"
     case mit = "MIT License"
     case bsd_3_clause_clear = "BSD 3-clause Clear license"
     case zlib = "zLib License"
+    case boringSSL = "BoringSSL"
+    case unknown = "Unknown License"
 
-    init(licenseText: String) {
-        let text = licenseText
-            .replace(of: "\n", with: " ")
-            .replace(of: #"  +"#, with: " ")
+    var lowercased: String {
+        rawValue.lowercased()
+    }
 
-        if text.contains("Apache License") || text.contains(APACHE_2_TEXT) {
-            self = .apache_2
-        } else if text.hasPrefix("MIT License") || text.contains(MIT_TEXT) {
-            self = .mit
-        } else if text.contains(BSD_3_CLAUSE_CLEAR_TEXT) {
-            self = .bsd_3_clause_clear
-        } else if text.contains(ZLIB_TEXT) {
-            self = .zlib
-        } else {
-            self = .unknown
+    init(text: String) {
+        let types: [LicenseType : String] = [
+            .apache_2: "Apache License",
+            .mit: "MIT License",
+            .bsd_3_clause_clear: "Redistribution and use in source and binary forms",
+            .zlib: "This software is provided 'as-is', without any express",
+            .boringSSL: "BoringSSL is a fork of OpenSSL"
+        ]
+        self = types.compactMap { key, value -> (LicenseType, String.Index)? in
+            guard let range = text.range(of: value) else { return nil }
+            return (key, range.lowerBound)
         }
+        .sorted { $0.1 < $1.1 }
+        .first?.0 ?? .unknown
     }
 }

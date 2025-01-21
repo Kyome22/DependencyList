@@ -7,34 +7,31 @@
 
 import Foundation
 
-public struct Library: Identifiable {
-    public let name: String
-    public let repositoryURL: String
-    public let licenseType: String
-    public let licenseBody: String
-    public let sentences: [LicenseSentence]
+public struct Library: Sendable, Identifiable {
+    public var name: String
+    public var repositoryURL: String
+    public var licenseType: String
+    public var licenseBody: String
+    public var id = UUID()
 
-    public var id: String { name }
-
-    public init(name: String, repositoryURL: String, licenseType: String, licenseBody: String) {
+    init(name: String, repositoryURL: String, licenseType: String, licenseBody: String) {
         self.name = name
         self.repositoryURL = repositoryURL
         self.licenseType = licenseType
         self.licenseBody = licenseBody
-        self.sentences = licenseBody.splitLicenseBody()
     }
 
-    public static let mock = Library(
-        name: "Sample",
-        repositoryURL: "https://github.com/sample/Sample.git",
-        licenseType: "MIT License",
-        licenseBody: (0 ..< 50).map({ _ in "License Body" }).joined(separator: " ")
-    )
+//    public static let mock = Library(
+//        name: "Sample",
+//        repositoryURL: "https://github.com/sample/Sample.git",
+//        licenseType: "MIT License",
+//        licenseBody: (0 ..< 50).map({ _ in "License Body" }).joined(separator: " ")
+//    )
 }
 
 extension Library {
     public static var libraries: [Library] {
-        return SPP.libraries.compactMap { info -> Library? in
+        SPP.libraries.compactMap { info -> Library? in
             guard let name = info["name"],
                   let repositoryURL = info["repositoryURL"],
                   let licenseType = info["licenseType"],

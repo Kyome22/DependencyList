@@ -7,14 +7,15 @@
 
 import SwiftUI
 
-struct DependencyListView<DVM: DependencyListViewModel>: View {
-    @StateObject var viewModel: DVM
+struct DependencyListView: View {
+    @State var appName = ""
+    private var libraries = Library.libraries
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text("acknowledgments\(viewModel.appName)", bundle: .module)
-                ForEach(viewModel.libraries) { library in
+                Text("acknowledgments\(appName)", bundle: .module)
+                ForEach(libraries) { library in
                     Divider()
                     LibraryView(library: library)
                 }
@@ -30,9 +31,13 @@ struct DependencyListView<DVM: DependencyListViewModel>: View {
             maxHeight: 700,
             alignment: .leading
         )
+        .onAppear {
+            let bundleName = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String
+            appName = bundleName ?? String(localized: "unknownApp", bundle: .module)
+        }
     }
 }
 
 #Preview {
-    DependencyListView(viewModel: DependencyListViewModelPreviewMock())
+    DependencyListView()
 }
