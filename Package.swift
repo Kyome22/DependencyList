@@ -22,11 +22,9 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-argument-parser.git", exact: "1.7.0"),
     ],
     targets: [
-        .target(name: "SourcePackagesParserKit"),
         .executableTarget(
             name: "source-packages-parser",
             dependencies: [
-                "SourcePackagesParserKit",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
             ],
             path: "Sources/SourcePackagesParser",

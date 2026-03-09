@@ -17,11 +17,11 @@ public struct LibraryView: View {
             Text(library.name)
                 .font(.title)
             Button {
-                if let url = URL(string: library.repositoryURL) {
+                if let url = URL(string: library.url) {
                     NSWorkspace.shared.open(url)
                 }
             } label: {
-                Text(library.repositoryURL)
+                Text(library.url)
             }
             .buttonStyle(.link)
             Toggle(isOn: $showDetail) {
